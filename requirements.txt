@@ -1,0 +1,11 @@
+numpy
+opencv-python
+Pillow
+SpeechRecognition
+pyttsx3
+keras
+tensorflow
+pytesseract
+textblob
+webp
+tf_keras
