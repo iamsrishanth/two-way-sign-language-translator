@@ -1,42 +1,47 @@
-# ✋🔄 Two Way Sign Language Translator  
+# Running the Two-Way Sign Language Translator
 
-A **desktop application** that enables seamless communication by translating **voice to sign language** and **sign language to voice**.  
-This project aims to bridge the communication gap between the hearing and speech-impaired community and others.  
+## Prerequisites
 
----
+- Python 3.9 is recommended (as per project requirements).
+- A webcam is required for gesture recognition.
 
-## ⚙️ Libraries & Tools  
-- **Tkinter** – GUI framework  
-- **TensorFlow & Keras** – Deep learning models  
-- **PyAudio & SpeechRecognition** – Voice input & processing  
-- **PIL (Pillow)** – Image handling  
-- **OpenCV** – Video & gesture recognition  
+## Setup
 
----
+1.  **Clone or Download** the repository.
+2.  **Open a terminal** and navigate to the project directory.
+3.  **Create a virtual environment** (optional but recommended):
+    ```bash
+    python -m venv venv
+    .\venv\Scripts\activate  # On Windows
+    # source venv/bin/activate  # On macOS/Linux
+    ```
+4.  **Install dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-## 🚀 How to Use  
-1. Install the required libraries:  
-   ```bash
-   pip install tensorflow keras pyaudio SpeechRecognition pillow opencv-python
-Run the main GUI application:
+## Running the Application
 
-bash
-Copy code
-python3 main.py
-To add new GIFs (sign animations) to the dataset:
+### GUI Application (Recommended)
 
-Place files directly into the dataset folder with appropriate filenames
+To run the main application with the graphical user interface:
 
-Or use extract.py with file paths for automated extraction
+```bash
+python final_pred.py
+```
 
-🎯 Features
-🎤 Voice to Sign Translation – Converts spoken words into sign language GIFs.
+- Click "Speak" to convert text to speech.
+- Click "Clear" to reset the text.
 
-🖐️ Sign to Voice Translation – Uses gesture recognition to translate signs into text/voice.
+### Headless Prediction
 
-🖼️ Customizable Dataset – Add new signs easily with GIFs or images.
+To run the prediction script without the main GUI (opens cv2 windows):
 
-🖥️ User-Friendly GUI – Built with Tkinter for a smooth experience.
+```bash
+python prediction_wo_gui.py
+```
 
-✅ Summary
-This project demonstrates how AI + Computer Vision + Speech Recognition can work together to make communication more inclusive.
+## Troubleshooting
+
+- **Model Not Found**: Ensure `cnn8grps_rad1_model.h5` is in the same directory as the scripts.
+- **Webcam Issues**: Ensure your webcam is connected and not used by another application.

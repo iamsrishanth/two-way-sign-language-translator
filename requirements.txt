@@ -1,11 +1,19 @@
-numpy
-opencv-python
-Pillow
-SpeechRecognition
-pyttsx3
-keras
-tensorflow
-pytesseract
-textblob
-webp
-tf_keras
+# Core dependencies for Two-Way Sign Language Translator
+
+# Computer Vision
+opencv-python>=4.5.0
+cvzone>=1.5.0
+
+# Machine Learning
+tensorflow>=2.10.0
+keras>=2.10.0
+
+# Image Processing
+numpy>=1.21.0
+Pillow>=9.0.0
+
+# Text-to-Speech
+pyttsx3>=2.90
+
+# Spell Checking
+pyenchant>=3.2.0
