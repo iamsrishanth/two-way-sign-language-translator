@@ -1,15 +1,23 @@
 # Core dependencies for Two-Way Sign Language Translator
 
 # Computer Vision
-opencv-python>=4.5.0
+opencv-python==4.9.0.80
+opencv-contrib-python==4.9.0.80
 cvzone>=1.5.0
 
 # Machine Learning
-tensorflow>=2.10.0
+tensorflow==2.18.0
 keras>=2.10.0
 
+# MediaPipe for hand tracking
+mediapipe==0.10.14
+
+# JAX dependencies (required by mediapipe)
+jax==0.4.23
+jaxlib==0.4.23
+
 # Image Processing
-numpy>=1.21.0
+numpy==1.26.4
 Pillow>=9.0.0
 
 # Text-to-Speech
