@@ -25,3 +25,7 @@ pyttsx3>=2.90
 
 # Spell Checking
 pyenchant>=3.2.0
+
+# Voice Recognition (for voice_to_asl.py)
+SpeechRecognition>=3.10.0
+PyAudio>=0.2.14
