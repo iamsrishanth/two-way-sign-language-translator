@@ -21,3 +21,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+Sign-IEEE-extracted/
+Sign-IEEE-Rewritten.docx
+Sign-IEEE.zip
+Sign-IEEE.docx
