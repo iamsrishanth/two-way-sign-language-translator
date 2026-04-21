@@ -1,0 +1,150 @@
+@startuml Class_Diagram
+title Two-Way Sign Language Translator - Class Diagram
+
+skinparam classAttributeIconSize 0
+skinparam backgroundColor #FFFFFF
+skinparam class {
+    BackgroundColor #F5F8FF
+    ArrowColor #2563EB
+    BorderColor #1E40AF
+    FontColor #1E293B
+    HeaderBackgroundColor #DBEAFE
+}
+skinparam note {
+    BackgroundColor #FEF9C3
+    BorderColor #CA8A04
+    FontColor #1E293B
+}
+skinparam title {
+    FontColor #1E293B
+    FontSize 18
+}
+skinparam shadowing false
+
+class TwoWayTranslatorApp {
+    - current_mode : StringVar
+    - vs : VideoCapture
+    - model : Sequential
+    - speak_engine : pyttsx3.Engine
+    - recognizer : Recognizer
+    - image_generator : ASLImageGenerator
+    - current_images : list
+    - animation_index : int
+    - is_playing : bool
+    - str : string
+    - pts : list
+    - ct : dict
+    - word1..word4 : string
+    + __init__()
+    + setup_ui()
+    + switch_mode()
+    + start_camera()
+    + stop_camera()
+    + video_loop()
+    + predict(test_image)
+    + distance(x, y) : float
+    + apply_suggestion(num)
+    + speak_text()
+    + clear_text()
+    + start_listening()
+    + display_asl(text)
+    + animate_next()
+    + stop_animation()
+    + destructor()
+    + run()
+}
+
+class Application {
+    - vs : VideoCapture
+    - model : Sequential
+    - speak_engine : pyttsx3.Engine
+    - ct : dict
+    - str : string
+    - word : string
+    - current_symbol : string
+    - pts : list
+    - ten_prev_char : list
+    - word1..word4 : string
+    + __init__()
+    + video_loop()
+    + predict(test_image)
+    + distance(x, y) : float
+    + action1()
+    + action2()
+    + action3()
+    + action4()
+    + speak_fun()
+    + clear_fun()
+    + destructor()
+}
+
+class ASLTranslatorGUI {
+    - translator : ASLTranslator
+    - current_images : list
+    - animation_index : int
+    - is_playing : bool
+    + __init__()
+    + setup_ui()
+    + start_listening()
+    + listen_thread()
+    + process_recognized_text(text)
+    + process_text_input()
+    + display_asl(text)
+    + animate_next()
+    + stop_animation()
+    + run()
+}
+
+class ASLTranslator {
+    - recognizer : Recognizer
+    - image_generator : ASLImageGenerator
+    - is_listening : bool
+    - COMMON_WORDS : list
+    + __init__()
+    + listen_to_voice() : string
+    + get_asl_for_word(word) : list
+    + get_asl_for_text(text) : list
+}
+
+class ASLImageGenerator {
+    - cache_dir : string
+    - image_cache : dict
+    - ASL_DESCRIPTIONS : dict
+    - ASL_EMOJIS : dict
+    + __init__(cache_dir)
+    + create_asl_image(letter, size) : Image
+    + create_word_image(word, size) : Image
+    - _draw_hand_outline(draw, size, letter)
+}
+
+class HandDetector <<external>> {
+    + findHands(image, draw, flipType) : list
+}
+
+class Recognizer <<external>> {
+    + adjust_for_ambient_noise(source)
+    + listen(source, timeout) : AudioData
+    + recognize_google(audio) : string
+}
+
+class CNNModel <<external>> {
+    + predict(image) : ndarray
+}
+
+TwoWayTranslatorApp --> ASLImageGenerator : uses
+TwoWayTranslatorApp --> HandDetector : uses
+TwoWayTranslatorApp --> Recognizer : uses
+TwoWayTranslatorApp --> CNNModel : uses
+
+Application --> HandDetector : uses
+Application --> CNNModel : uses
+
+ASLTranslatorGUI --> ASLTranslator : contains
+ASLTranslator --> ASLImageGenerator : contains
+ASLTranslator --> Recognizer : uses
+
+note top of TwoWayTranslatorApp : Combined two-way translator\n(two_way_translator.py)
+note top of Application : ASL to Voice standalone\n(asl_to_voice.py)
+note top of ASLTranslatorGUI : Voice to ASL standalone\n(voice_to_asl.py)
+
+@enduml

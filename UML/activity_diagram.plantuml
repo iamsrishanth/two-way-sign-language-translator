@@ -1,0 +1,106 @@
+@startuml Activity_Diagram
+title Two-Way Sign Language Translator - Activity Diagram
+
+skinparam backgroundColor #FFFFFF
+skinparam activity {
+    BackgroundColor #DBEAFE
+    BorderColor #1E40AF
+    FontColor #1E293B
+    ArrowColor #2563EB
+    DiamondBackgroundColor #FEF9C3
+    DiamondBorderColor #CA8A04
+    DiamondFontColor #1E293B
+    StartColor #1E40AF
+    EndColor #1E40AF
+}
+skinparam swimlane {
+    BorderColor #94A3B8
+    TitleBackgroundColor #DBEAFE
+    TitleFontColor #1E40AF
+}
+skinparam note {
+    BackgroundColor #FEF9C3
+    BorderColor #CA8A04
+    FontColor #1E293B
+}
+skinparam title {
+    FontColor #1E293B
+    FontSize 18
+}
+skinparam shadowing false
+
+|Application|
+start
+:Launch Application;
+:Load CNN Model;
+:Initialize GUI + TTS + Enchant;
+:Set mode = ASL to Voice;
+
+fork
+    |ASL to Voice|
+    :Start Webcam;
+    repeat
+        :Capture + flip frame;
+        :Detect hand (hd);
+        if (Hand detected?) then (yes)
+            :Crop ROI;
+            :Extract landmarks (hd2);
+            :Draw skeleton on white canvas;
+            :CNN predict (8 groups);
+            :Apply landmark rules -> letter;
+            if (Token?) then (next)
+                :Append char to sentence;
+            else if (space?) then (yes)
+                :Append space;
+            else if (backspace?) then (yes)
+                :Remove last char;
+            else (char)
+                :Buffer in ten_prev_char;
+            endif
+            :Spell check suggestions;
+            :Update GUI;
+        else (no)
+            :Show camera feed;
+        endif
+    repeat while (ASL mode active?)
+    :Release webcam;
+
+fork again
+    |Voice to ASL|
+    :Show Voice-to-ASL UI;
+    if (Input?) then (Microphone)
+        :Listen (background thread);
+        :Adjust for ambient noise;
+        :Call Google Speech API;
+        if (Recognized?) then (yes)
+            :Get text;
+        else (no)
+            :Show error;
+            stop
+        endif
+    else (Text Input)
+        :Get typed text;
+    endif
+    :For each letter in text;
+    :Generate ASL image (PIL);
+    :Cache in ./asl_images/;
+    repeat
+        :Display ASL image;
+        :Update progress bar;
+        :Wait 800ms;
+        :Advance index;
+    repeat while (Letters remain AND playing?)
+    :Show complete;
+
+end fork
+
+|Application|
+if (Switch mode?) then (yes)
+    :switch_mode();
+else (no)
+endif
+:User closes window;
+:Release resources;
+stop
+
+@enduml

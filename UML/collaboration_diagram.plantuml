@@ -1,0 +1,65 @@
+@startuml Collaboration_Diagram
+title Two-Way Sign Language Translator - Collaboration Diagram\n(Communication Between Objects)
+
+skinparam backgroundColor #FFFFFF
+skinparam component {
+    BackgroundColor #F5F8FF
+    BorderColor #2563EB
+    FontColor #1E293B
+}
+skinparam actor {
+    BackgroundColor #DBEAFE
+    BorderColor #1E40AF
+    FontColor #1E293B
+}
+skinparam note {
+    BackgroundColor #FEF9C3
+    BorderColor #CA8A04
+    FontColor #1E293B
+}
+skinparam title {
+    FontColor #1E293B
+    FontSize 16
+}
+skinparam ArrowColor #2563EB
+skinparam shadowing false
+
+component "TwoWayTranslatorApp\n(Main Controller)" as App
+component "HandDetector hd [Primary]" as HD1
+component "HandDetector hd2 [Cropped]" as HD2
+component "CNN Model (cnn8grps_rad1_model.h5)" as CNN
+component "Enchant Dict [en-US]" as Dict
+component "pyttsx3 TTS Engine" as TTS
+component "ASLImageGenerator" as ImgGen
+component "SpeechRecognizer [Google API]" as SR
+component "Tkinter GUI" as GUI
+component "VideoCapture [Webcam]" as Camera
+
+actor "Deaf User (Signing)" as DeafUser
+actor "Hearing User (Speaking)" as HearingUser
+
+DeafUser --> Camera : 1. hand gesture input
+Camera --> App : 2. read(frame)
+App --> HD1 : 3. findHands(frame)
+HD1 --> App : 4. hand bbox + landmarks
+App --> HD2 : 5. findHands(cropped_roi)
+HD2 --> App : 6. pts[0..20]
+App --> CNN : 7. predict(white_skeleton)
+CNN --> App : 8. prob[8 groups]
+App --> App : 9. apply_rules() -> letter
+App --> Dict : 10. suggest(word)
+Dict --> App : 11. [word1..word4]
+App --> GUI : 12. update displays
+App --> TTS : 13. say(sentence)
+
+HearingUser --> SR : A. speak or type
+SR --> App : B. recognized text
+App --> ImgGen : C. create_asl_image(letter)
+ImgGen --> App : D. PIL Image
+App --> GUI : E. animate_next(image)
+
+note right of CNN : 8 groups to 26 letters\nvia landmark geometry rules
+note bottom of SR : Google Speech Recognition API\nInternet connection required
+note top of ImgGen : Local PIL image generation\nwith caching in ./asl_images/
+
+@enduml

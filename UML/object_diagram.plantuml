@@ -1,0 +1,90 @@
+@startuml Object_Diagram
+title Two-Way Sign Language Translator - Object Diagram\n(Runtime Snapshot: ASL to Voice Mode Active)
+
+skinparam backgroundColor #FFFFFF
+skinparam object {
+    BackgroundColor #F5F8FF
+    BorderColor #1E40AF
+    FontColor #1E293B
+    HeaderBackgroundColor #DBEAFE
+}
+skinparam note {
+    BackgroundColor #FEF9C3
+    BorderColor #CA8A04
+    FontColor #1E293B
+}
+skinparam title {
+    FontColor #1E293B
+    FontSize 16
+}
+skinparam ArrowColor #2563EB
+skinparam shadowing false
+
+object "app : TwoWayTranslatorApp" as app {
+    current_mode = "asl_to_voice"
+    str = "HELLO "
+    current_symbol = "W"
+    count = 47
+    word1 = "HELLO"
+    word2 = "HELL"
+    word3 = "HELP"
+    word4 = "HALLO"
+}
+object "hd : HandDetector" as hd {
+    maxHands = 1
+    detectionCon = 0.8
+}
+object "hd2 : HandDetector" as hd2 {
+    maxHands = 1
+    detectionCon = 0.8
+}
+object "model : CNN Sequential" as model {
+    input_shape = "400x400x3"
+    output_classes = 8
+    file = "cnn8grps_rad1_model.h5"
+}
+object "speak_engine : pyttsx3 Engine" as tts {
+    rate = 100
+    voice = "voices[0].id"
+}
+object "recognizer : Recognizer" as recognizer {
+    energy_threshold = 300
+    phrase_time_limit = 15
+}
+object "image_generator : ASLImageGenerator" as imgGen {
+    cache_dir = "./asl_images"
+    cached_count = 26
+}
+object "vs : VideoCapture" as camera {
+    device_index = 0
+    frame_width = 640
+    frame_height = 480
+}
+object "enchant_dict : Dict" as enchant {
+    language = "en-US"
+    word = "HELLO"
+}
+object "ten_prev_char : list" as prevChars {
+    "[0]" = "H"
+    "[1]" = "E"
+    "[2]" = "L"
+    "[3]" = "L"
+    "[4]" = "O"
+    "[5]" = "next"
+    "[7..9]" = "W"
+}
+
+app --> hd
+app --> hd2
+app --> model
+app --> tts
+app --> recognizer
+app --> imgGen
+app --> camera
+app --> enchant
+app --> prevChars
+
+note top of app : Mode: ASL to Voice\nRecognizing: "W"
+note right of model : 8 groups -> 26 letters\nvia landmark rules
+
+@enduml

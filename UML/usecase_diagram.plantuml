@@ -1,0 +1,83 @@
+@startuml UseCase_Diagram
+title Two-Way Sign Language Translator - Use Case Diagram
+
+skinparam backgroundColor #FFFFFF
+skinparam actor {
+    BackgroundColor #DBEAFE
+    BorderColor #1E40AF
+    FontColor #1E293B
+}
+skinparam usecase {
+    BackgroundColor #F5F8FF
+    BorderColor #2563EB
+    FontColor #1E293B
+    ArrowColor #2563EB
+}
+skinparam package {
+    BackgroundColor #F8FAFC
+    BorderColor #94A3B8
+    FontColor #1E40AF
+}
+skinparam title {
+    FontColor #1E293B
+    FontSize 18
+}
+skinparam shadowing false
+
+actor "Deaf User" as DeafUser
+actor "Hearing User" as HearingUser
+actor "Google Speech API" as SpeechAPI <<system>>
+actor "TTS Engine" as TTS <<system>>
+actor "CNN Model" as CNN <<system>>
+
+rectangle "Two-Way Sign Language Translator" {
+    package "ASL to Voice" {
+        usecase "Show Hand Sign to Camera" as UC1
+        usecase "Real-time Hand Tracking" as UC2
+        usecase "Recognize ASL Letter A-Z" as UC3
+        usecase "Build Word / Sentence" as UC4
+        usecase "Get Word Suggestions" as UC5
+        usecase "Apply Suggestion" as UC6
+        usecase "Speak Text (TTS)" as UC7
+        usecase "Clear Text" as UC8
+    }
+    package "Voice to ASL" {
+        usecase "Speak into Microphone" as UC9
+        usecase "Type Text Manually" as UC10
+        usecase "Convert Speech to Text" as UC11
+        usecase "Fingerspell Letters in ASL" as UC12
+        usecase "Animate ASL Signs" as UC13
+        usecase "Stop Animation" as UC14
+    }
+    package "App Control" {
+        usecase "Switch Mode" as UC15
+        usecase "Launch Application" as UC16
+    }
+}
+
+DeafUser --> UC1
+DeafUser --> UC6
+DeafUser --> UC7
+DeafUser --> UC8
+DeafUser --> UC15
+DeafUser --> UC16
+HearingUser --> UC9
+HearingUser --> UC10
+HearingUser --> UC14
+HearingUser --> UC15
+HearingUser --> UC16
+
+UC1 ..> UC2 : <<include>>
+UC2 ..> UC3 : <<include>>
+UC3 ..> UC4 : <<include>>
+UC4 ..> UC5 : <<extend>>
+UC9 ..> UC11 : <<include>>
+UC10 ..> UC12 : <<include>>
+UC11 ..> UC12 : <<include>>
+UC12 ..> UC13 : <<include>>
+
+UC3 --> CNN
+UC11 --> SpeechAPI
+UC7 --> TTS
+
+@enduml

@@ -1,0 +1,79 @@
+@startuml DFD_Diagram
+title Data Flow Diagram (Level 1) - Two-Way Sign Language Translator
+
+skinparam backgroundColor #FFFFFF
+skinparam rectangle {
+    BackgroundColor #F5F8FF
+    BorderColor #2563EB
+    FontColor #1E293B
+}
+skinparam actor {
+    BackgroundColor #DBEAFE
+    BorderColor #1E40AF
+    FontColor #1E293B
+}
+skinparam database {
+    BackgroundColor #F0FDF4
+    BorderColor #16A34A
+    FontColor #1E293B
+}
+skinparam note {
+    BackgroundColor #FEF9C3
+    BorderColor #CA8A04
+    FontColor #1E293B
+}
+skinparam title {
+    FontColor #1E293B
+    FontSize 18
+}
+skinparam ArrowColor #2563EB
+skinparam shadowing false
+
+actor "Deaf User\n(Signer)" as DeafUser
+actor "Hearing User\n(Speaker)" as HearingUser
+actor "Google Speech\nAPI" as GoogleAPI
+
+database "CNN Model\n(H5 File)" as ModelDS
+database "ASL Image Cache\n(./asl_images/)" as ImgCacheDS
+database "Enchant Dict\n(en-US)" as DictDS
+
+rectangle "P1 Webcam Capture\n& Preprocessing" as P1
+rectangle "P2 Hand Detection\n& Landmark Extraction" as P2
+rectangle "P3 CNN Gesture\nClassification" as P3
+rectangle "P4 Post-Processing\nLandmark Rules" as P4
+rectangle "P5 Sentence Builder\n& Spell Check" as P5
+rectangle "P6 Text-to-Speech\n(pyttsx3)" as P6
+rectangle "P7 Speech-to-Text\nConversion" as P7
+rectangle "P8 ASL Image\nGeneration" as P8
+rectangle "P9 ASL Animation\nDisplay" as P9
+rectangle "GUI Display Layer\n(Tkinter)" as GUIS
+
+DeafUser --> P1 : hand gesture
+P1 --> P2 : RGB frame 640x480
+P2 --> P3 : skeleton 400x400
+P3 --> ModelDS : inference request
+ModelDS --> P3 : probability[8]
+P3 --> P4 : [ch1, ch2]
+P2 --> P4 : pts[0..20]
+P4 --> P5 : ASL letter or token
+P5 --> DictDS : spell check query
+DictDS --> P5 : suggestions
+P5 --> GUIS : sentence + suggestions
+GUIS --> P6 : sentence (on Speak)
+P6 --> HearingUser : audio output
+P1 --> GUIS : camera feed
+
+HearingUser --> P7 : speech or typed text
+P7 --> GoogleAPI : audio PCM
+GoogleAPI --> P7 : recognized text
+P7 --> P8 : text string
+P8 --> ImgCacheDS : cache lookup/store
+ImgCacheDS --> P8 : cached PIL Image
+P8 --> P9 : PIL Image sequence
+P9 --> GUIS : animated frames
+GUIS --> DeafUser : ASL sign display
+
+note bottom of P4 : 8 CNN groups -> 26 letters\nvia geometric landmark rules
+note right of P8 : Local PIL generation\n+ caching (no external API)
+
+@enduml

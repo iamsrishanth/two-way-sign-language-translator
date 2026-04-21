@@ -1,0 +1,95 @@
+@startuml Sequence_Diagram
+title Two-Way Sign Language Translator - Sequence Diagram
+
+skinparam backgroundColor #FFFFFF
+skinparam participant {
+    BackgroundColor #DBEAFE
+    BorderColor #1E40AF
+    FontColor #1E293B
+}
+skinparam actor {
+    BackgroundColor #FEF9C3
+    BorderColor #CA8A04
+    FontColor #1E293B
+}
+skinparam sequenceArrowColor #2563EB
+skinparam sequenceLifeLineBorderColor #1E40AF
+skinparam sequenceGroupBackgroundColor #F0F9FF
+skinparam sequenceGroupBorderColor #7DD3FC
+skinparam sequenceGroupFontColor #0369A1
+skinparam note {
+    BackgroundColor #FEF9C3
+    BorderColor #CA8A04
+    FontColor #1E293B
+}
+skinparam title {
+    FontColor #1E293B
+    FontSize 18
+}
+skinparam shadowing false
+
+actor "Deaf User" as User
+participant "TwoWayTranslatorApp" as App
+participant "VideoCapture" as Cam
+participant "HandDetector" as HD
+participant "CNN Model" as CNN
+participant "Enchant Dict" as Dict
+participant "pyttsx3 TTS" as TTS
+participant "Tkinter GUI" as GUI
+actor "Hearing User" as HUser
+participant "SpeechRecognizer" as SR
+participant "Google Speech API" as GAPI
+participant "ASLImageGenerator" as ImgGen
+
+== Application Startup ==
+App -> CNN : load_model('cnn8grps_rad1_model.h5')
+CNN --> App : model loaded
+App -> GUI : setup_ui()
+App -> GUI : show ASL to Voice mode
+
+== ASL to Voice Loop (every 30ms) ==
+loop
+    App -> Cam : read()
+    Cam --> App : frame
+    App -> HD : findHands(frame)
+    HD --> App : bbox + landmarks
+    App -> HD : findHands(cropped_ROI)
+    HD --> App : pts[0..20]
+    App -> CNN : predict(skeleton_400x400)
+    CNN --> App : prob[8 groups]
+    App -> App : apply rules -> letter
+    App -> Dict : suggest(word)
+    Dict --> App : [word1..word4]
+    App -> GUI : update char + sentence + suggestions
+end
+
+== Speak ==
+User -> GUI : click Speak
+App -> TTS : say(sentence)
+TTS --> User : audio
+
+== Switch Mode ==
+HUser -> GUI : select Voice to ASL
+App -> Cam : release()
+
+== Voice Input ==
+HUser -> GUI : click Start Listening
+App -> SR : listen(timeout=10s)
+SR -> GAPI : audio stream
+GAPI --> SR : text
+SR --> App : recognized text
+App -> GUI : show text
+
+== ASL Animation ==
+loop each letter
+    App -> ImgGen : create_asl_image(letter)
+    ImgGen --> App : PIL Image
+    App -> GUI : show image + progress
+    App -> App : wait 800ms
+end
+
+== Stop ==
+HUser -> GUI : click Stop
+App -> App : is_playing = False
+
+@enduml
