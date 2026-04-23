@@ -49,3 +49,23 @@ Networks,” International Conference on Machine Learning (ICML), 2006.
 
 [15]	A. Vaswani et al.,“Attention Is All You Need,” Advances in Neural Information Processing Systems (NeurIPS), 2017
 
+
+[16]	N. C. Camgoz, S. Hadfield, O. Koller, and R. Bowden, "SubUNets: End-to-End Hand Shape and Continuous Sign Language Recognition," in *Proc. IEEE Int. Conf. Comput. Vis. (ICCV)*, 2017, pp. 3056-3065.
+
+[17]	N. C. Camgoz, S. Hadfield, O. Koller, H. Ney, and R. Bowden, "Neural Sign Language Translation," in *Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR)*, 2018, pp. 7784-7793.
+
+[18]	M. T. Islam, S. M. A. Hossain, and M. R. Amin, "A Review on Sign Language Recognition and Translation Using Deep Learning," *IEEE Access*, vol. 11, pp. 27919-27952, 2023.
+
+[19]	A. Howard et al., "MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications," arXiv:1704.04861, 2017.
+
+[20]	M. Sandler, A. Howard, M. Zhu, A. Zhmoginov, and L.-C. Chen, "MobileNetV2: Inverted Residuals and Linear Bottlenecks," in *Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR)*, 2018, pp. 4510-4520.
+
+[21]	A. Dosovitskiy et al., "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale," in *Proc. Int. Conf. Learn. Represent. (ICLR)*, 2021.
+
+[22]	T.-Y. Lin et al., "Microsoft COCO: Common Objects in Context," in *Proc. Eur. Conf. Comput. Vis. (ECCV)*, 2014, pp. 740-755.
+
+[23]	K. He, X. Zhang, S. Ren, and J. Sun, "Deep Residual Learning for Image Recognition," in *Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR)*, 2016, pp. 770-778.
+
+[24]	S. Hochreiter and J. Schmidhuber, "Long Short-Term Memory," *Neural Computation*, vol. 9, no. 8, pp. 1735-1780, 1997.
+
+[25]	D. P. Kingma and J. Ba, "Adam: A Method for Stochastic Optimization," in *Proc. Int. Conf. Learn. Represent. (ICLR)*, 2015.
